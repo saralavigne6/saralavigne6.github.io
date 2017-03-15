@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Qin Zhang's blog">
 <meta property="og:description" content="前言在准备期间，在网上翻阅了大量的github+hexo教程，但是有些不是很全，导致开始一头雾水，后来找到两篇教程终于能够让我看懂的了，如下链接： link onelink two根据网上的教程和自己的经历，以下是我对这个过程的小结，以防自己忘记，和一些过程中遇到的问题。
 准备工作Windows10Node.jsGitHexo（当我在进行这步时，我用的git shell做的相关命令，当然后来发现不">
-<meta property="og:updated_time" content="2017-03-15T06:08:23.001Z">
+<meta property="og:updated_time" content="2017-03-15T06:13:43.625Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="github+hexo创建个人博客总结">
 <meta name="twitter:description" content="前言在准备期间，在网上翻阅了大量的github+hexo教程，但是有些不是很全，导致开始一头雾水，后来找到两篇教程终于能够让我看懂的了，如下链接： link onelink two根据网上的教程和自己的经历，以下是我对这个过程的小结，以防自己忘记，和一些过程中遇到的问题。
@@ -191,7 +191,7 @@
         <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在准备期间，在网上翻阅了大量的github+hexo教程，但是有些不是很全，导致开始一头雾水，后来找到两篇教程终于能够让我看懂的了，如下链接：<br> <a href="http://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html" target="_blank" rel="external">link one</a><br><a href="https://volc1605.github.io/2016/10/03/Hexo%E4%B9%8BNexT%E4%B8%BB%E9%A2%98%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B/" target="_blank" rel="external">link two</a><br>根据网上的教程和自己的经历，以下是我对这个过程的小结，以防自己忘记，和一些过程中遇到的问题。</p>
 <h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>Windows10<br>Node.js<br>Git<br>Hexo<br>（当我在进行这步时，我用的git shell做的相关命令，当然后来发现不行<br>，还是用git bash比较好）</p>
 <h1 id="创建一个仓库"><a href="#创建一个仓库" class="headerlink" title="创建一个仓库"></a>创建一个仓库</h1><p>这个很简单，需要注意的是，第一个点前面必须是你的github的用户名，比如：saralavigne6.github.io</p>
-<h1 id="配置ssh-key"><a href="#配置ssh-key" class="headerlink" title="配置ssh key:"></a>配置ssh key:</h1><p>通过配置ssh key来解决本地和服务器的连接问题。<br>    <code>$ cd ~/. ssh</code>       #检查本机已存在的ssh密钥<br>    <code>$ ssh-keygen -t rsa -C</code>“邮件地址“</p>
+<h1 id="配置ssh-key"><a href="#配置ssh-key" class="headerlink" title="配置ssh key"></a>配置ssh key</h1><p>通过配置ssh key来解决本地和服务器的连接问题。<br>    <code>$ cd ~/. ssh</code>       #检查本机已存在的ssh密钥<br>    <code>$ ssh-keygen -t rsa -C</code>“邮件地址“</p>
 <p>在用户目录下，打开用户目录, <code>.ssh\id_rsa.pub</code>文件，记事本打开并复制里面的内容，打开你的github主页，进入个人设置 -&gt;<code>SSH and GPG keys</code>-&gt; <code>New SSH key</code></p>
 <p><code>$ ssh -T git@github.com</code> # 注意邮箱地址不用改&gt;<code>yes</code>&gt;<code>You&#39;ve successfully authenticated, but GitHub does not provide shell access.</code></p>
 <h1 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h1><p>新建一个用于写博客的文件夹<code>/G/blog</code>,如下命令均在<code>git bash</code>中。</p>
