@@ -219,6 +219,150 @@
 
 
   
+    <article id="post-github-hexo创建个人博客总结" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/10/github-hexo创建个人博客总结/">github+hexo创建个人博客总结</a>
+    </h1>
+  
+
+        
+        <a href="/2017/03/10/github-hexo创建个人博客总结/" class="archive-article-date">
+  	<time datetime="2017-03-10T10:23:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在准备期间，在网上翻阅了大量的github+hexo教程，但是有些不是很全，导致开始一头雾水，后来找到两篇教程终于能够让我看懂的了，如下链接：<br> <a href="http://www.cnblogs.com/liuxianan/p/build-blog-website-by-hexo-github.html" target="_blank" rel="external">link one</a><br><a href="https://volc1605.github.io/2016/10/03/Hexo%E4%B9%8BNexT%E4%B8%BB%E9%A2%98%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B/" target="_blank" rel="external">link two</a><br>根据网上的教程和自己的经历，以下是我对这个过程的小结，以防自己忘记，和一些过程中遇到的问题。</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>Windows10<br>Node.js<br>Git<br>Hexo<br>（当我在进行这步时，我用的git shell做的相关命令，当然后来发现不行<br>，还是用git bash比较好）</p>
+<p>#创建一个仓库<br>这个很简单，需要注意的是，第一个点前面必须是你的github的用户名，比如：saralavigne6.github.io</p>
+<p>#配置ssh key:<br>通过配置ssh key来解决本地和服务器的连接问题。<br>    <code>$ cd ~/. ssh</code>       #检查本机已存在的ssh密钥<br>    <code>$ ssh-keygen -t rsa -C</code>“邮件地址“</p>
+<p>在用户目录下，打开用户目录, <code>.ssh\id_rsa.pub</code>文件，记事本打开并复制里面的内容，打开你的github主页，进入个人设置 -&gt;<code>SSH and GPG keys</code>-&gt; <code>New SSH key</code></p>
+<p><code>$ ssh -T git@github.com</code> # 注意邮箱地址不用改&gt;<code>yes</code>&gt;<code>You&#39;ve successfully authenticated, but GitHub does not provide shell access.</code></p>
+<p>#安装hexo</p>
+<p>新建一个用于写博客的文件夹<code>/G/blog</code>,如下命令均在<code>git bash</code>中。</p>
+<p>桌面上右击选中<code>git bash</code>:</p>
+<p><code>$ npm install -g hexo</code> #全局安装</p>
+<p><code>$ cd / g/blog</code></p>
+<p><code>$ hexo init</code> #执行后，<code>blog</code>文件下自动下载了很多文件</p>
+<p>在<code>/ g/blog</code>中右击选择<code>git bash</code>输入以下命令:</p>
+<p><code>$ hexo g</code> # 生成</p>
+<p><code>$ hexo s</code> # 启动服务，便可以在 <a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a> 中看默认的主题</p>
+<p>如果你要上传,<code>$ hexo g</code> 后，再<code>$ hexo d</code>，就可以在<a href="https://saralavigne6.github.io中访问了" target="_blank" rel="external">https://saralavigne6.github.io中访问了</a></p>
+<p>#换主题<br>在<code>g/blog</code>下面，右击打开<code>git bash</code></p>
+<p><code>$ git clone https://······</code>#主题的https，网上很多主题，下</p>
+<p>载后在<code>G/blog/themes</code>下面，我是<code>yilia</code>,然后修改<code>G/blog</code>中的配</p>
+<p>置文件_<code>config.yml</code>: 将<code>theme:landscape</code>改为<code>theme:yilia</code>，将blog中配置文件改成如下，repository是表示你所建立的仓库的链接：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># Deployment</span></div><div class="line"><span class="meta">## Docs: https:<span class="comment">//hexo.io/docs/deployment.html</span></span></div><div class="line"><span class="symbol">deploy:</span></div><div class="line"><span class="symbol">  type:</span> git</div><div class="line"><span class="symbol">  repository:</span> https:<span class="comment">//github.com/saralavigne6/saralavigne6.github.io.git</span></div><div class="line"><span class="symbol">  branch:</span> master</div></pre></td></tr></table></figure>
+<p>然后<code>$ hexo g</code>,<code>$ hexo d</code>上传成功。</p>
+<p>##以上是对整个搭建过程的简单介绍，以防我忘记，下面总结下我遇到的问题和注意事项：</p>
+<ul>
+<li><p>一定按照教程用<code>git bash</code>,因为我用<code>git shell</code>产生了不可描述的错误；</p>
+</li>
+<li><p><code>deploy</code>:下面的<code>type</code>应为<code>type:git</code>;</p>
+</li>
+<li><p>头像之类的图片在配置文件里面设置路径；</p>
+</li>
+<li><p>主页上面的“随笔”开始不知道怎么设置，后来思考了一下，“随笔”在<code>tags</code>下面，就在测试文章里加了一个标签“随笔”<br>提交后，点击主页上的“随笔”显示包含标签为“随笔”的文章；</p>
+</li>
+<li><p>开始页面上出现中文乱码，后来<code>Sublime Text</code>编辑文档之类的就行了，不用记事本打开。</p>
+</li>
+<li><p>邮箱：<code>mailto:ihateyou1692783558@Hotmail.com</code>;</p>
+</li>
+<li><p>音乐外链播放器</p>
+</li>
+<li><p>博客中插入图片</p>
+<ul>
+<li><p>首先在blog目录下确认 <code>_config.yml</code>中有 <code>post_asset_folder:true</code>  </p>
+</li>
+<li><p>之后再使用<code>hexo new &#39;new&#39;</code> 创建新博客的时候，会在<code>source/_posts</code>里面创建.md文件的同时生成一个相同的名字的文件夹，把该文章中需要使用的图片放在该文件夹下即可，使用时：<code>！[ ] (new/text.jpg)</code></p>
+</li>
+</ul>
+</li>
+<li><p>添加标签页面</p>
+<ul>
+<li><p><code>$ hexo new page tags</code> #输入命令后，<code>blog/sourse</code>下会生成一个新文件夹tags,下面会有一个index.md,然后设置页面类型，添加<code>type :”tags”</code>，如下：<br><code>--- title: tags date: 2016-11-15 19:10:05 type: &quot;tags&quot; ---</code></p>
+</li>
+<li><p>然后就可以在文章（位于<code>blog/sourse/_post</code>）中用标签了<br><code>--- title: 基于Hexo和Github搭建博客 date: 2016-11-09 tags: [npm, hexo, github] categories: 搭建博客 ---</code></p>
+</li>
+</ul>
+</li>
+<li><p>添加分类页面</p>
+<ul>
+<li><p><code>$ hexo new page categories</code> #输入命令后，<code>blog/sourse</code>下会生成一个新文件夹categories,下面会有一个index.md，然后设置页面类型，添加<code>type :” categories ”</code>，如下：<br><code>--- title: categories date: 2016-11-15 19:11:13 type: &quot;categories&quot; --</code></p>
+</li>
+<li><p>然后就可以在文章（位于<code>blog/sourse/_post</code>）中用分类了<br><code>--- title: 基于Hexo和Github搭建博客 date: 2016-11-09 tags: [npm, hexo, github] categories: 搭建博客 ---</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="配置文件-config-yml"><a href="#配置文件-config-yml" class="headerlink" title="配置文件_config.yml"></a>配置文件_config.yml</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Hexo Configuration</span></div><div class="line"><span class="comment">## Docs: https://hexo.io/docs/configuration.html</span></div><div class="line"><span class="comment">## Source: https://github.com/hexojs/hexo/</span></div><div class="line"></div><div class="line"><span class="comment"># Site</span></div><div class="line">title: Qin Zhang's blog</div><div class="line">subtitle: <span class="string">"前端 JavaScript PS"</span></div><div class="line">description: This is my blog.</div><div class="line">author: Qin Zhang</div><div class="line">language: zh-CN</div><div class="line">timezone:</div><div class="line"></div><div class="line"><span class="comment"># URL</span></div><div class="line"><span class="comment">## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'</span></div><div class="line">url: http://yoursite.com</div><div class="line">root: /</div><div class="line">permalink: :year/:month/:day/:title/</div><div class="line">permalink_defaults:</div><div class="line"></div><div class="line"><span class="comment"># Directory</span></div><div class="line">source_dir: source</div><div class="line">public_dir: public</div><div class="line">tag_dir: tags</div><div class="line">archive_dir: archives</div><div class="line">category_dir: categories</div><div class="line">code_dir: downloads/code</div><div class="line">i18n_dir: :lang</div><div class="line">skip_render:</div><div class="line"></div><div class="line"><span class="comment"># Writing</span></div><div class="line">new_post_name: :title.md <span class="comment"># File name of new posts</span></div><div class="line">default_layout: post</div><div class="line">titlecase: <span class="literal">false</span> <span class="comment"># Transform title into titlecase</span></div><div class="line">external_link: <span class="literal">true</span> <span class="comment"># Open external links in new tab</span></div><div class="line">filename_case: <span class="number">0</span></div><div class="line">render_drafts: <span class="literal">false</span></div><div class="line">post_asset_folder: <span class="literal">true</span></div><div class="line">relative_link: <span class="literal">false</span></div><div class="line">future: <span class="literal">true</span></div><div class="line">highlight:</div><div class="line">  enable: <span class="literal">true</span></div><div class="line">  line_number: <span class="literal">true</span></div><div class="line">  auto_detect: <span class="literal">true</span></div><div class="line">  tab_replace:</div><div class="line"></div><div class="line"><span class="comment"># Category &amp; Tag</span></div><div class="line">default_category: uncategorized</div><div class="line">category_map:</div><div class="line">tag_map:</div><div class="line"></div><div class="line"><span class="comment"># Date / Time format</span></div><div class="line"><span class="comment">## Hexo uses Moment.js to parse and display date</span></div><div class="line"><span class="comment">## You can customize the date format as defined in</span></div><div class="line"><span class="comment">## http://momentjs.com/docs/#/displaying/format/</span></div><div class="line">date_format: YYYY-MM-DD</div><div class="line">time_format: HH:mm:ss</div><div class="line"></div><div class="line"><span class="comment"># Pagination</span></div><div class="line"><span class="comment">## Set per_page to 0 to disable pagination</span></div><div class="line">per_page: <span class="number">10</span></div><div class="line">pagination_dir: page</div><div class="line"></div><div class="line"><span class="comment"># Extensions</span></div><div class="line"><span class="comment">## Plugins: https://hexo.io/plugins/</span></div><div class="line"><span class="comment">## Themes: https://hexo.io/themes/</span></div><div class="line">theme: yilia</div><div class="line"></div><div class="line"><span class="comment"># Deployment</span></div><div class="line"><span class="comment">## Docs: https://hexo.io/docs/deployment.html</span></div><div class="line">deploy:</div><div class="line">  <span class="keyword">type</span>: git</div><div class="line">  repository: https://github.com/saralavigne6/saralavigne6.github.io.git</div><div class="line">  branch: <span class="keyword">master</span></div><div class="line"></div><div class="line"><span class="title">jsonContent</span>:</div><div class="line">    <span class="keyword">meta</span>: <span class="literal">false</span></div><div class="line">    pages: <span class="literal">false</span></div><div class="line">    posts:</div><div class="line">      title: <span class="literal">true</span></div><div class="line">      <span class="keyword">date</span>: <span class="literal">true</span></div><div class="line">      path: <span class="literal">true</span></div><div class="line">      text: <span class="literal">true</span></div><div class="line">      raw: <span class="literal">false</span></div><div class="line">      content: <span class="literal">false</span></div><div class="line">      slug: <span class="literal">false</span></div><div class="line">      updated: <span class="literal">false</span></div><div class="line">      comments: <span class="literal">false</span></div><div class="line">      link: <span class="literal">false</span></div><div class="line">      permalink: <span class="literal">false</span></div><div class="line">      excerpt: <span class="literal">false</span></div><div class="line">      categories: <span class="literal">false</span></div><div class="line">      tags: <span class="literal">true</span></div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">github</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/总结/" class="article-tag-list-link color3">总结</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/03/10/github-hexo创建个人博客总结/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-测试" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -253,19 +397,19 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">测试</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">github</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">测试</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
         		</li>
       		
 		</ul>
@@ -473,11 +617,7 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">测试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+                <a href="javascript:void(0)" class="js-tag color3">小结，hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -486,6 +626,14 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">测试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
             
             <div class="clearfix"></div>
