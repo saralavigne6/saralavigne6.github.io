@@ -29,7 +29,7 @@ alter database open
 注：startup直接启动三个阶段，不能直接启动到mount阶段
 2.指定参数文件来启动oracle首先创建一个参数文件：">
 <meta property="og:image" content="http://yoursite.com/2017/04/02/ORACLE数据库学习记录/11.png">
-<meta property="og:updated_time" content="2017-04-02T04:33:14.381Z">
+<meta property="og:updated_time" content="2017-04-02T08:21:14.854Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ORACLE数据库学习记录">
 <meta name="twitter:description" content="这篇文章是记录“ORACLE数据库”学习过程中的总结，更新中···授课老师：刘波书籍：《大型数据库（ORACLE）与实训》
@@ -245,6 +245,27 @@ alter database open
 <p>进入bdump:</p>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">vi</span> alert_orcl.<span class="built_in">log</span></div></pre></td></tr></table></figure>
 <p><strong>（一）小结</strong><br>●spfile：只改变spfile的设置，不改变当前实例运行，重新启动数据库后生效（只修改参数文件）；<br>●memory：只改变当前实例运行，重新启动数据库后失效（写内存立即生效）；<br>●both：同时改变实例及spfile，当前更改立即生效，重新启动数据库后仍然有效（两者都修改）。<br>如果是deferred：表示这次修改对当前执行会话中不发生作用，在以后打开的会话中起作用，故它有“推迟”影响的效果。<br>如果是false：表示不能使用<code>alter system</code>命令修改。<br>Alert_log是Oracle数据库运行阶段的运行日志在Oracle工作时，会将所有会影响到整体性能的操作、变化和错误信息记录在一个日志中，就是Alert_log Alert_Log是进行数据库故障诊断、监控和调整的重要研究对象。<br>根据系统参数可以获取到<code>alert_log</code>的路径，文件名默认为<code>alert_&lt;sid&gt;.log</code>，其中sid为数据库的唯一标志。在实验环境中，数据库名称<code>alert_wilson.log</code>。<br><code>SQL&gt; select status from v$instance</code>;<br>查看版本号：<code>SQL&gt;select * from v$version</code></p>
+<h2 id="（二）"><a href="#（二）" class="headerlink" title="（二）"></a>（二）</h2><h3 id="1-rownum和rowid-以及把rowid转换成页号，如何提取中间段的内容"><a href="#1-rownum和rowid-以及把rowid转换成页号，如何提取中间段的内容" class="headerlink" title="1.rownum和rowid,以及把rowid转换成页号，如何提取中间段的内容"></a>1.rownum和rowid,以及把rowid转换成页号，如何提取中间段的内容</h3><p>先建立一个拥有50行的表：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">SQL&gt;create table test50(c1 int)</div><div class="line">  <span class="number">2</span>  /</div><div class="line">Table created.</div><div class="line">SQL&gt; begin</div><div class="line">  <span class="number">2</span> for i in <span class="number">1.</span><span class="number">.50</span></div><div class="line">  <span class="number">3</span> loop</div><div class="line">  <span class="number">4</span> insert into test50 values(i);</div><div class="line">  <span class="number">5</span> end loop;</div><div class="line">  <span class="number">6</span> end;</div><div class="line">  <span class="number">7</span> /</div></pre></td></tr></table></figure>
+<p>rownum是有分配的数字，不像rowid是唯一的：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;rownum <span class="keyword">from</span> test50</div></pre></td></tr></table></figure>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;rowid <span class="keyword">from</span> test50</div></pre></td></tr></table></figure>
+<p>rownum查找10到20的数据：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;<span class="keyword">select</span> * <span class="keyword">from</span> (<span class="function"><span class="keyword">select</span> rownum rn <span class="title">from</span>(<span class="params"><span class="keyword">select</span> rownum <span class="keyword">from</span> test50</span>) <span class="keyword">where</span> rownum&lt;</span>=<span class="number">20</span>) <span class="keyword">where</span> rn&gt;=<span class="number">10</span></div></pre></td></tr></table></figure>
+<p>rowid转化成数字：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;<span class="keyword">select</span> dbms_rowid.rowid_block_number(rowid) <span class="keyword">from</span> test50</div></pre></td></tr></table></figure>
+<h3 id="2-创建一个用户，不指定默认的表空间，该用户会用users作为默认的表空间"><a href="#2-创建一个用户，不指定默认的表空间，该用户会用users作为默认的表空间" class="headerlink" title="2.创建一个用户，不指定默认的表空间，该用户会用users作为默认的表空间"></a>2.创建一个用户，不指定默认的表空间，该用户会用users作为默认的表空间</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;create <span class="keyword">user</span> <span class="title">zhangqin</span> identified by zhangqin</div></pre></td></tr></table></figure>
+<p>看默认的表空间是哪里,一般系统内部那些要大写：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;<span class="keyword">select</span> default_tablespace <span class="keyword">from</span> dba_users <span class="keyword">where</span> uaername=<span class="string">'ZHANGQIN'</span></div></pre></td></tr></table></figure>
+<h3 id="3-验证跟踪文件"><a href="#3-验证跟踪文件" class="headerlink" title="3.验证跟踪文件"></a>3.验证跟踪文件</h3><ol>
+<li>先关闭oracle,然后设置<code>ORACLE_SID=orcl</code></li>
+<li>执行<code>rm $ORACLE_BASE/admin/orcl/udump/*.trc</code></li>
+<li>重启oracle，注意，ORACLE_SID这个变量的内容一定要是orcl</li>
+<li>在SQLPLUS中设置<code>alter session set SQL_TRACE=true</code></li>
+<li>随便执行一条sql查询语句</li>
+<li>设置<code>alter session set SQL_TRACE=false</code></li>
+<li>观察你执行的sql语句是否在跟踪文件里面了(如果执行<code>select * from user_tables</code>;则要查看在哪个trace文件中含有这个sql，可以执行：<code>grep &#39;user_table&#39; $ORACLE_BASE/admin/orcl/udump/*.trc</code>;可以用tkprof工具，将trc文件转换成可以阅读的文件，例如：<code>tkprof orcl_ora_5537.trc  orcl_ora_5537.txt</code>，然后你去看<code>orcl_ora_5537.txt</code>文件，就要清楚得多了)</li>
+</ol>
 
       
 
@@ -289,15 +310,15 @@ alter database open
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">ORACLE</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">数据库</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -516,18 +537,6 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">github</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">ORACLE</a>
               </li>
              
@@ -536,7 +545,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">记录</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">github</a>
               </li>
              
               <li class="article-tag-list-item">
