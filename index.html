@@ -166,6 +166,116 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-ORACLE数据库学习记录" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/02/ORACLE数据库学习记录/">ORACLE数据库学习记录</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/02/ORACLE数据库学习记录/" class="archive-article-date">
+  	<time datetime="2017-04-02T01:53:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这篇文章是记录“ORACLE数据库”学习过程中的总结，更新中···<br>授课老师：刘波<br>书籍：《大型数据库（ORACLE）与实训》</p>
+<h2 id="（一）"><a href="#（一）" class="headerlink" title="（一）"></a>（一）</h2><h3 id="1-ORACLE启动的三个步骤"><a href="#1-ORACLE启动的三个步骤" class="headerlink" title="1.ORACLE启动的三个步骤"></a>1.ORACLE启动的三个步骤</h3><ol>
+<li>startup nomount</li>
+<li>alter database mount</li>
+<li>alter database open</li>
+</ol>
+<p>注：startup直接启动三个阶段，不能直接启动到mount阶段</p>
+<h3 id="2-指定参数文件来启动oracle"><a href="#2-指定参数文件来启动oracle" class="headerlink" title="2.指定参数文件来启动oracle"></a>2.指定参数文件来启动oracle</h3><p>首先创建一个参数文件：<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;<span class="built_in">create</span> pfile=<span class="string">'/home/oracle/zhangqin.ora'</span> <span class="built_in">from</span> spfile</div></pre></td></tr></table></figure></p>
+<p>再启动：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">SQL&gt;startup pfile=<span class="string">'/home/oracle/zhangqin.ora'</span> nomount</div><div class="line">SQL&gt;alter database mount</div><div class="line">SQL&gt;alter database <span class="built_in">open</span></div></pre></td></tr></table></figure></p>
+<p>注意：startup启动全部阶段。</p>
+<h3 id="3-oracle的实例包含了进程和内存，在实例启动阶段启动了哪些进程"><a href="#3-oracle的实例包含了进程和内存，在实例启动阶段启动了哪些进程" class="headerlink" title="3.oracle的实例包含了进程和内存，在实例启动阶段启动了哪些进程"></a>3.oracle的实例包含了进程和内存，在实例启动阶段启动了哪些进程</h3><p>首先将oracle启动到实例：<br><figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">SQL&gt;startup nomount</div><div class="line">SQL&gt;!</div></pre></td></tr></table></figure></p>
+<p>再查看进程：<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[oracle<span class="variable">@DevServer</span> ~]<span class="variable">$ </span>ps -aef | grep ora<span class="number">_</span></div></pre></td></tr></table></figure></p>
+<h3 id="4-oracle的-ORACLE-SID与启动实例之间的关系"><a href="#4-oracle的-ORACLE-SID与启动实例之间的关系" class="headerlink" title="4.oracle的$ORACLE_SID与启动实例之间的关系"></a>4.oracle的$ORACLE_SID与启动实例之间的关系</h3><p>$ORACLE_SID不同，可以启动不同的实例</p>
+<p>进入.bash_profile(oracle目录下)修改ORACLE_SID：<br><img src="/2017/04/02/ORACLE数据库学习记录/11.png" alt=""></p>
+<p>再通过以下命令查看$ORACLE_SID变化成上面修改的dbtest：<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[oracle<span class="variable">@DevServer</span> ~]<span class="variable">$ </span>su - root</div><div class="line"><span class="symbol">Password:</span></div><div class="line">[root<span class="variable">@DevServer</span> ~]<span class="comment"># su - oracle</span></div><div class="line">[oracle<span class="variable">@DevServer</span> ~]<span class="variable">$ </span>echo <span class="variable">$ORACLE_SID</span></div><div class="line">dbtest</div></pre></td></tr></table></figure></p>
+<h3 id="5-oracle实例与参数文件（spfile文件和init文件之间的关系）"><a href="#5-oracle实例与参数文件（spfile文件和init文件之间的关系）" class="headerlink" title="5.oracle实例与参数文件（spfile文件和init文件之间的关系）"></a>5.oracle实例与参数文件（spfile文件和init文件之间的关系）</h3><p>将spfile更名，看能不能启动实例，将init文件更名，看能不能启动实例<br>使用</p>
+<figure class="highlight cos"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;show <span class="keyword">parameter</span> spfile</div></pre></td></tr></table></figure>
+<p>查看value值，有就代表spfile启动。</p>
+<h3 id="6-可以用这样的语句：“alter-system-set-参数名-参数值”，来修改spfile的值"><a href="#6-可以用这样的语句：“alter-system-set-参数名-参数值”，来修改spfile的值" class="headerlink" title="6.可以用这样的语句：“alter system set 参数名=参数值”，来修改spfile的值"></a>6.可以用这样的语句：“alter system set 参数名=参数值”，来修改spfile的值</h3><p>本实例中修改成功，重启后不失效：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;alter <span class="keyword">system</span> <span class="keyword">set</span> pga_aggregate_target=1024m</div></pre></td></tr></table></figure>
+<p>本实例中不生效，重启后生效：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;alter <span class="keyword">system</span> <span class="keyword">set</span> pga_aggregate_target=2048m <span class="comment">scope=spfile</span></div></pre></td></tr></table></figure>
+<p>本实例中生效，重启后失效：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;alter <span class="keyword">system</span> <span class="keyword">set</span> pga_aggregate_target=300m <span class="comment">scope=memory</span></div></pre></td></tr></table></figure>
+<p>本实例中生效，重启后不失效：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;alter <span class="keyword">system</span> <span class="keyword">set</span> pga_aggregate_target=300m <span class="comment">scope=both</span></div></pre></td></tr></table></figure>
+<p>注意：类似的还有session,system是针对整个oracle系统，而session是针对当前回话。</p>
+<h3 id="7-从spfile中创建pfile文件，从pfile中创建spfile文件"><a href="#7-从spfile中创建pfile文件，从pfile中创建spfile文件" class="headerlink" title="7.从spfile中创建pfile文件，从pfile中创建spfile文件"></a>7.从spfile中创建pfile文件，从pfile中创建spfile文件</h3><h5 id="默认目录下建立"><a href="#默认目录下建立" class="headerlink" title="默认目录下建立"></a>默认目录下建立</h5><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;<span class="built_in">create</span> pfile <span class="built_in">from</span> spfile</div></pre></td></tr></table></figure>
+<p>在$ORACLE_HOME/dbs/下通过以下命令可以查找到：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">ls</span> -<span class="keyword">la</span> | <span class="keyword">grep</span> pfile</div></pre></td></tr></table></figure>
+<h5 id="指定目录下建立"><a href="#指定目录下建立" class="headerlink" title="指定目录下建立"></a>指定目录下建立</h5><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;<span class="built_in">create</span> pfile=<span class="string">'/tmp/initorcl.ora'</span> <span class="built_in">from</span> spfile</div></pre></td></tr></table></figure>
+<p>注意：建立spfile同理可得，但是建立spfile默认目录时，要将oracle关闭掉，因为oracle正常启动第一顺序用的是spfile，这是亲身试验所得。</p>
+<h3 id="8-查看启动到nomount阶段时所输出的alert日志（bdump）"><a href="#8-查看启动到nomount阶段时所输出的alert日志（bdump）" class="headerlink" title="8.查看启动到nomount阶段时所输出的alert日志（bdump）"></a>8.查看启动到nomount阶段时所输出的alert日志（bdump）</h3><p>查看路径($ORACLE_BASE/admin/orcl)：</p>
+<figure class="highlight cos"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;show <span class="keyword">parameter</span> dump_dest</div></pre></td></tr></table></figure>
+<p>进入bdump:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">vi</span> alert_orcl.<span class="built_in">log</span></div></pre></td></tr></table></figure>
+<p><strong>（一）小结</strong><br>●spfile：只改变spfile的设置，不改变当前实例运行，重新启动数据库后生效（只修改参数文件）；<br>●memory：只改变当前实例运行，重新启动数据库后失效（写内存立即生效）；<br>●both：同时改变实例及spfile，当前更改立即生效，重新启动数据库后仍然有效（两者都修改）。<br>如果是deferred：表示这次修改对当前执行会话中不发生作用，在以后打开的会话中起作用，故它有“推迟”影响的效果。<br>如果是false：表示不能使用<code>alter system</code>命令修改。<br>Alert_log是Oracle数据库运行阶段的运行日志在Oracle工作时，会将所有会影响到整体性能的操作、变化和错误信息记录在一个日志中，就是Alert_log Alert_Log是进行数据库故障诊断、监控和调整的重要研究对象。<br>根据系统参数可以获取到<code>alert_log</code>的路径，文件名默认为<code>alert_&lt;sid&gt;.log</code>，其中sid为数据库的唯一标志。在实验环境中，数据库名称<code>alert_wilson.log</code>。<br><code>SQL&gt; select status from v$instance</code>;<br>查看版本号：<code>SQL&gt;select * from v$version</code></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">ORACLE</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">数据库</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">记录</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/02/ORACLE数据库学习记录/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-电脑小问题及解决方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -222,7 +332,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">电脑</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -230,7 +340,7 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">电脑</a>
         		</li>
       		
 		</ul>
@@ -406,15 +516,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">github</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
         		</li>
       		
 		</ul>
@@ -622,11 +732,11 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">电脑</a>
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">记录</a>
+                <a href="javascript:void(0)" class="js-tag color2">github</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -634,11 +744,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+                <a href="javascript:void(0)" class="js-tag color2">ORACLE</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">github</a>
+                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">记录</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">电脑</a>
               </li>
             
             <div class="clearfix"></div>
