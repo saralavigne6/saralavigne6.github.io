@@ -29,7 +29,7 @@ alter database open
 注：startup直接启动三个阶段，不能直接启动到mount阶段
 2.指定参数文件来启动oracle首先创建一个参数文件：">
 <meta property="og:image" content="http://yoursite.com/2017/04/02/ORACLE数据库学习记录/11.png">
-<meta property="og:updated_time" content="2017-04-02T08:21:14.854Z">
+<meta property="og:updated_time" content="2017-06-07T15:11:09.414Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ORACLE数据库学习记录">
 <meta name="twitter:description" content="这篇文章是记录“ORACLE数据库”学习过程中的总结，更新中···授课老师：刘波书籍：《大型数据库（ORACLE）与实训》
@@ -256,7 +256,7 @@ alter database open
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;<span class="keyword">select</span> dbms_rowid.rowid_block_number(rowid) <span class="keyword">from</span> test50</div></pre></td></tr></table></figure>
 <h3 id="2-创建一个用户，不指定默认的表空间，该用户会用users作为默认的表空间"><a href="#2-创建一个用户，不指定默认的表空间，该用户会用users作为默认的表空间" class="headerlink" title="2.创建一个用户，不指定默认的表空间，该用户会用users作为默认的表空间"></a>2.创建一个用户，不指定默认的表空间，该用户会用users作为默认的表空间</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;create <span class="keyword">user</span> <span class="title">zhangqin</span> identified by zhangqin</div></pre></td></tr></table></figure>
 <p>看默认的表空间是哪里,一般系统内部那些要大写：</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt;<span class="keyword">select</span> default_tablespace <span class="keyword">from</span> dba_users <span class="keyword">where</span> uaername=<span class="string">'ZHANGQIN'</span></div></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt; <span class="keyword">select</span> default_tablespace <span class="keyword">from</span> dba_users <span class="keyword">where</span> uaername=<span class="string">'ZHANGQIN'</span></div></pre></td></tr></table></figure>
 <h3 id="3-验证跟踪文件"><a href="#3-验证跟踪文件" class="headerlink" title="3.验证跟踪文件"></a>3.验证跟踪文件</h3><ol>
 <li>先关闭oracle,然后设置<code>ORACLE_SID=orcl</code></li>
 <li>执行<code>rm $ORACLE_BASE/admin/orcl/udump/*.trc</code></li>
@@ -266,7 +266,20 @@ alter database open
 <li>设置<code>alter session set SQL_TRACE=false</code></li>
 <li>观察你执行的sql语句是否在跟踪文件里面了(如果执行<code>select * from user_tables</code>;则要查看在哪个trace文件中含有这个sql，可以执行：<code>grep &#39;user_table&#39; $ORACLE_BASE/admin/orcl/udump/*.trc</code>;可以用tkprof工具，将trc文件转换成可以阅读的文件，例如：<code>tkprof orcl_ora_5537.trc  orcl_ora_5537.txt</code>，然后你去看<code>orcl_ora_5537.txt</code>文件，就要清楚得多了)</li>
 </ol>
-
+<h2 id="（三）"><a href="#（三）" class="headerlink" title="（三）"></a>（三）</h2><h3 id="1-创建一个表空间后向表空间中增加一个数据文件；查询表空间的信息："><a href="#1-创建一个表空间后向表空间中增加一个数据文件；查询表空间的信息：" class="headerlink" title="1.创建一个表空间后向表空间中增加一个数据文件；查询表空间的信息："></a>1.创建一个表空间后向表空间中增加一个数据文件；查询表空间的信息：</h3><p>创建表空间：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt; create tablespace tb_test datafile <span class="string">'/ora10/app/oracle/oradata/orcl/td_tes.dbf'</span> <span class="built_in">size</span> <span class="number">200</span>m</div></pre></td></tr></table></figure>
+<p>向表空间里面插入数据文件：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt; alter tablespace tb_test <span class="keyword">add</span><span class="bash"> datafile <span class="string">'/ora10/app/oracle/oradata/orcl/tb_tes.dbf'</span> size 200m</span></div></pre></td></tr></table></figure>
+<p>查询信息：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">SQL&gt; col file_name <span class="built_in">format</span> a45</div><div class="line">SQL&gt; col tablespace_name <span class="built_in">format</span> a15</div><div class="line">SQL&gt; select file_id,tablespace_name,file_name <span class="built_in">from</span> dba_data_files order <span class="keyword">by</span> file_id</div></pre></td></tr></table></figure>
+<h3 id="2-删除问题1创建的一个表空间-删除表空间后，里面的数据文件也跟着删除-："><a href="#2-删除问题1创建的一个表空间-删除表空间后，里面的数据文件也跟着删除-：" class="headerlink" title="2.删除问题1创建的一个表空间(删除表空间后，里面的数据文件也跟着删除)："></a>2.删除问题1创建的一个表空间(删除表空间后，里面的数据文件也跟着删除)：</h3><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt; <span class="built_in">drop</span> tablespace tb_test</div></pre></td></tr></table></figure>
+<h3 id="3-查看表空间下有多少个数据文件-select-from-all-tables-where-tablespace-name-’表名’-："><a href="#3-查看表空间下有多少个数据文件-select-from-all-tables-where-tablespace-name-’表名’-：" class="headerlink" title="3.查看表空间下有多少个数据文件(select * from all_tables where tablespace_name=’表名’)："></a>3.查看表空间下有多少个数据文件(select * from all_tables where tablespace_name=’表名’)：</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt; <span class="keyword">select</span> * <span class="keyword">from</span> all_tables <span class="keyword">where</span> tablespace_name=‘TB_TEST’</div></pre></td></tr></table></figure>
+<h3 id="4-查看创建表的区段-Extent-management-local-uniform表示每次分配的大小都为1MB-若不指定此选项，每次分配的大小有oracle数据库系统决定"><a href="#4-查看创建表的区段-Extent-management-local-uniform表示每次分配的大小都为1MB-若不指定此选项，每次分配的大小有oracle数据库系统决定" class="headerlink" title="4.查看创建表的区段(Extent management local uniform表示每次分配的大小都为1MB,若不指定此选项，每次分配的大小有oracle数据库系统决定):"></a>4.查看创建表的区段(Extent management local uniform表示每次分配的大小都为1MB,若不指定此选项，每次分配的大小有oracle数据库系统决定):</h3><p>创建表空间：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">SQL&gt; create tablespace uniform_space</div><div class="line">  <span class="number">2</span>  Datafile '/home/oracle/uniform_space01.dbf' size <span class="number">10</span>m</div><div class="line">  <span class="number">3</span>  Extent management local uniform</div><div class="line">  <span class="number">4</span>  /</div></pre></td></tr></table></figure>
+<p>在uniform_space上面创建一个表：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt; create <span class="keyword">table</span> z <span class="comment">(c1 int) tablespace uniform_space</span></div></pre></td></tr></table></figure>
+<p>查看表的区段分配情况(统计一个区段有多少数据块)：</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL&gt; <span class="keyword">select</span> file_id,extent_id,block_id,blocks <span class="keyword">from</span> dba_extents <span class="keyword">where</span> segment_name=‘Z’ <span class="keyword">and</span> tablespace_name=<span class="string">'UNIFORM_SPACE'</span></div></pre></td></tr></table></figure>
       
 
       
@@ -553,15 +566,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">电脑</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">github</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">电脑</a>
               </li>
             
             <div class="clearfix"></div>
